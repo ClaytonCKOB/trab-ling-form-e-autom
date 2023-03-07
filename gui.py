@@ -7,12 +7,13 @@ statemachine = StateMachine()
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.row = 2
+        self.column = 20
         self.logs = []
         # root window
         self.height = "500"
         self.width = "900"
         self.hHeader = str(int(int(self.height)*0.15))
+        self.scroll = None
 
         self.title('Sistema Bancário - Linguagens Formais')
         self.geometry(f'{self.width}x{self.height}')
@@ -39,9 +40,13 @@ class App(tk.Tk):
         labCurState.place(x=110, y=10)
         
         self.bind('<Return>', self.readMsg)
+        self.scroll = tk.Scrollbar(self.body, orient='vertical')
+        self.scroll.place(relx=1, rely=0, relheight=1, anchor='ne')
+        # self.body.configure(yscrollcommand=self.scroll.set)
 
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
-        self.row += self.row + 1
-        self.logs.append(ttk.Label(self.body, text=log, font=("arial", 12, 'bold'), foreground="#5F8D4E"))
-        self.logs[len(self.logs) - 1].grid(row=self.row, column=0)
+        self.column += 20
+        # if self.column > 400 and self.scroll is None:
+        self.logs.append(ttk.Label(self.body, text=log, font=("arial", 12), foreground="#000"))
+        self.logs[len(self.logs) - 1].place(x=10, y=self.column)
