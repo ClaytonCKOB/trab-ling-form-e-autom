@@ -8,15 +8,18 @@ class StateMachine:
         self.current_event = 'home'
 
     def execute(self, palavra):
-        print(self.events[self.current_event](palavra))
-        return self.events[self.current_event](palavra)
+        old_state = self.current_state
+        text = self.events[self.current_event](palavra)
+        return {'text':text, 'old_state': old_state, 'cur_state': self.current_state, 'error': 0}
 
     def home(self, palavra):
         if(search('^senha', palavra)):
-            palavra = sub(r"^senha", '', palavra)
-            self.current_state = 'q1'
-            return 'Senha aceita.'
-
+            palavra = sub(r"^senha", '', palavra)            
+            if self.current_state == 'q0':
+                self.current_state = 'q1'
+                return 'Senha aceita.'
+            else:
+                return self.errorMessage('q1')
 
     def login(self, palavra):
         while(len(palavra) > 0):
@@ -49,3 +52,5 @@ class StateMachine:
         else:
             return 'Erro ao realizar o login'
 
+    def errorMessage(self, cur_state):
+        return {'text': 'Erro: movimento não permitido', 'old_state':self.current_state, 'cur_state':cur_state, 'error': 1}

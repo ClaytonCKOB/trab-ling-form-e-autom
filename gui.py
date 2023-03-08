@@ -46,7 +46,14 @@ class App(tk.Tk):
 
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
+        text = f"[{log['old_state']} -> {log['cur_state']}] {log['text']}"
+        print(log['text'])
+        print(log['error'])
+        color = "#000" if log['error'] == 0 else "#DF2E38"
         self.column += 20
-        # if self.column > 400 and self.scroll is None:
-        self.logs.append(ttk.Label(self.body, text=log, font=("arial", 12), foreground="#000"))
+        print(log)
+        print(log['error'] == 1)
+        self.logs.append(ttk.Label(self.body, text=text, font=("arial", 12), foreground=color))
         self.logs[len(self.logs) - 1].place(x=10, y=self.column)
+
+        log = {}
