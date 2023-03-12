@@ -36,8 +36,8 @@ class App(tk.Tk):
         self.body.grid(row=1, column=0)
         labTextCurState = ttk.Label(self.body, text='Estado atual: ', font=("arial", 12), foreground="#000")
         labTextCurState.place(x=10, y=10)
-        labCurState = ttk.Label(self.body, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
-        labCurState.place(x=110, y=10)
+        self.labCurState = ttk.Label(self.body, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
+        self.labCurState.place(x=110, y=10)
         
         self.bind('<Return>', self.readMsg)
         self.scroll = tk.Scrollbar(self.body, orient='vertical')
@@ -47,13 +47,11 @@ class App(tk.Tk):
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
         text = f"[{log['old_state']} -> {log['cur_state']}] {log['text']}"
-        print(log['text'])
-        print(log['error'])
         color = "#000" if log['error'] == 0 else "#DF2E38"
         self.column += 20
-        print(log)
-        print(log['error'] == 1)
         self.logs.append(ttk.Label(self.body, text=text, font=("arial", 12), foreground=color))
         self.logs[len(self.logs) - 1].place(x=10, y=self.column)
+        self.labCurState.config(text = log['cur_state'])
+        self.word.config(text = '')
 
         log = {}
