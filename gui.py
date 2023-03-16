@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.filedialog import askopenfile
 from statemachine import StateMachine
 
 statemachine = StateMachine()
@@ -28,7 +29,7 @@ class App(tk.Tk):
         label.place(x=10, y=15)
         self.word = ttk.Entry(frame)
         self.word.place(x=550, y=25)
-        btn = ttk.Button(frame, text='Show')
+        btn = ttk.Button(frame, text='Upload File', command= lambda : self.open_file())
         btn.place(x=750, y=20)
 
 
@@ -46,6 +47,16 @@ class App(tk.Tk):
 
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
+        self.displayInfo(log)
+
+    def open_file(self):
+        file_path = askopenfile(mode='r', filetypes=[('Text Files', '*txt')])
+        if file_path is not None:
+            for row in file_path:
+                log = statemachine.execute(row.replace('\n', ''))
+                self.displayInfo(log)
+    
+    def displayInfo(self, log):
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
         color = "#000" if log['error'] == 0 else "#DF2E38"
         self.column += 20
@@ -53,5 +64,3 @@ class App(tk.Tk):
         self.logs[len(self.logs) - 1].place(x=10, y=self.column)
         self.labCurState.config(text = log['cur_state'])
         self.word.config(text = '')
-
-        log = {}

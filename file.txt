@@ -1,0 +1,4 @@
+senha
+operacao
+retorno operacao
+encerrar
