@@ -46,7 +46,7 @@ class App(tk.Tk):
 
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
-        text = f"[{log['old_state']} -> {log['cur_state']}] {log['text']}"
+        text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
         color = "#000" if log['error'] == 0 else "#DF2E38"
         self.column += 20
         self.logs.append(ttk.Label(self.body, text=text, font=("arial", 12), foreground=color))
