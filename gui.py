@@ -14,6 +14,7 @@ class App(tk.Tk):
         self.height = "500"
         self.width = "900"
         self.hHeader = str(int(int(self.height)*0.15))
+        self.hInfo = str(int(int(self.height)*0.1))
         self.scroll = None
 
         self.title('Sistema Bancário - Linguagens Formais')
@@ -32,26 +33,43 @@ class App(tk.Tk):
         btn = ttk.Button(frame, text='Upload File', command= lambda : self.open_file())
         btn.place(x=750, y=20)
 
-
-        self.body = tk.Frame(self, width=self.width, height=str(int(self.height) - int(self.hHeader)))
-        self.body.grid(row=1, column=0)
-        labTextCurState = ttk.Label(self.body, text='Estado atual: ', font=("arial", 12), foreground="#000")
+        self.info = tk.Frame(self, width=self.width, height=self.hInfo)
+        self.info.grid(row=1, column=0)
+        labTextCurState = ttk.Label(self.info, text='Estado atual: ', font=("arial", 12), foreground="#000")
         labTextCurState.place(x=10, y=10)
-        self.labCurState = ttk.Label(self.body, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
+        self.labCurState = ttk.Label(self.info, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
         self.labCurState.place(x=110, y=10)
+
+        
+        self.body = tk.Frame(self, width=self.width, height=str(int(self.height) - int(self.hHeader) - int(self.hInfo)))
+        self.body.grid(row=2, column=0)
+        
         
         self.bind('<Return>', self.readMsg)
-        self.scroll = tk.Scrollbar(self.body, orient='vertical')
-        self.scroll.place(relx=1, rely=0, relheight=1, anchor='ne')
-        # self.body.configure(yscrollcommand=self.scroll.set)
+
+        scroll_bar = tk.Scrollbar(self.body)
+  
+        scroll_bar.pack( side = tk.RIGHT,
+                        fill = tk.Y )
+        
+        self.listbox = tk.Listbox(self.body, 
+                        yscrollcommand = scroll_bar.set, width='100', height='19')
+    
+        
+        self.listbox.pack( side = tk.LEFT, fill = tk.BOTH )
+        
+        scroll_bar.config( command = self.listbox.yview )
 
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
         self.displayInfo(log)
+        self.word.delete(0,tk.END)
 
     def open_file(self):
         file_path = askopenfile(mode='r', filetypes=[('Text Files', '*txt')])
         if file_path is not None:
+            statemachine.reset()
+            self.listbox.delete(0,tk.END)
             for row in file_path:
                 log = statemachine.execute(row.replace('\n', ''))
                 self.displayInfo(log)
@@ -60,7 +78,8 @@ class App(tk.Tk):
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
         color = "#000" if log['error'] == 0 else "#DF2E38"
         self.column += 20
-        self.logs.append(ttk.Label(self.body, text=text, font=("arial", 12), foreground=color))
-        self.logs[len(self.logs) - 1].place(x=10, y=self.column)
+        # self.logs.append(ttk.Label(self.body, text=text, font=("arial", 12), foreground=color))
+        self.listbox.insert(tk.END, text)
+        # self.logs[len(self.logs) - 1].place(x=10, y=self.column)
         self.labCurState.config(text = log['cur_state'])
         self.word.config(text = '')

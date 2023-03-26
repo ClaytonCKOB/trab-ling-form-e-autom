@@ -1,0 +1,14 @@
+senha
+sacar poupanca
+voltar
+sacar poupanca
+cancela
+sacar poupanca
+valor
+voltar
+valor
+senha
+[invalido]
+senha
+[valido]
+encerrar
