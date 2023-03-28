@@ -1,0 +1,19 @@
+senha
+pagamento
+[leitura]
+voltar
+pagamento
+manual
+voltar
+[valido]
+voltar
+codigo de barras
+[invalido]
+codigo de barras
+[valido]
+data de pagamento
+[valido]
+senha
+[invalido]
+senha
+[valido]

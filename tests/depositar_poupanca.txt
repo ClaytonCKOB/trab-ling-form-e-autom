@@ -1,0 +1,13 @@
+senha
+depositar poupanca
+voltar
+depositar poupanca
+cancela
+depositar poupanca
+valor
+voltar
+valor
+senha
+[invalido]
+senha
+[valido]

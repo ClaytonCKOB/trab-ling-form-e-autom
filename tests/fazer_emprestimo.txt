@@ -1,0 +1,19 @@
+senha
+fazer emprestimo
+cancela
+fazer emprestimo
+voltar
+fazer emprestimo
+valor
+voltar
+valor
+prazo
+voltar
+prazo
+parcelas
+voltar
+parcelas
+senha
+[invalido]
+senha
+[valido]

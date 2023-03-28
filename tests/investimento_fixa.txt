@@ -1,0 +1,25 @@
+senha
+investimento
+fixa
+voltar
+fixa
+cdb
+voltar
+cdb
+codigo
+[invalido]
+codigo
+[valido]
+senha
+[valido]
+investimento
+fixa
+tesouro direto
+voltar
+tesouro direto
+codigo
+[invalido]
+codigo
+[valido]
+senha
+[valido]

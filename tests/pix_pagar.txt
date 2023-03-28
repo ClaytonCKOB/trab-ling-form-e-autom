@@ -1,0 +1,17 @@
+senha
+pix
+pagar
+voltar
+pagar
+chave
+[invalido]
+chave
+[valido]
+valor
+[invalido]
+valor
+[valido]
+senha
+[invalido]
+senha
+[valido]

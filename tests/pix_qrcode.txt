@@ -1,0 +1,13 @@
+senha
+pix
+qr code
+[leitura]
+[valido]
+cancela
+qr code
+[leitura]
+[valido]
+senha
+[invalido]
+senha
+[valido]

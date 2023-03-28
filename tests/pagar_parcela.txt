@@ -1,0 +1,13 @@
+senha
+pagar parcela
+cancela
+pagar parcela
+voltar
+pagar parcela
+id emprestimo
+voltar
+id emprestimo
+senha
+[invalido]
+senha
+[valido]
