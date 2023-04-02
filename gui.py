@@ -8,7 +8,7 @@ statemachine = StateMachine()
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.column = 20
+        self.countMsg = 0
         self.logs = []
         # root window
         self.height = "500"
@@ -77,9 +77,8 @@ class App(tk.Tk):
     def displayInfo(self, log):
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
         color = "#000" if log['error'] == 0 else "#DF2E38"
-        self.column += 20
-        # self.logs.append(ttk.Label(self.body, text=text, font=("arial", 12), foreground=color))
         self.listbox.insert(tk.END, text)
-        # self.logs[len(self.logs) - 1].place(x=10, y=self.column)
+        self.listbox.itemconfig(self.countMsg, foreground=color)
+        self.countMsg += 1
         self.labCurState.config(text = log['cur_state'])
         self.word.config(text = '')
