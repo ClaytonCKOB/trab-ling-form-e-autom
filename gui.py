@@ -40,6 +40,9 @@ class App(tk.Tk):
         self.labCurState = ttk.Label(self.info, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
         self.labCurState.place(x=110, y=10)
 
+        self.successfull = ttk.Label(self.info, text='Movimento permitido', font=("arial", 12, 'bold'), foreground="#5F8D4E")
+        self.successfull.place(x=680, y=10)
+
         
         self.body = tk.Frame(self, width=self.width, height=str(int(self.height) - int(self.hHeader) - int(self.hInfo)))
         self.body.grid(row=2, column=0)
@@ -62,6 +65,12 @@ class App(tk.Tk):
 
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
+
+        if log['cur_state'] != 'q0':
+            self.successfull.place_forget()
+        else:
+            self.successfull.place(x=680, y=10)
+
         self.displayInfo(log)
         self.word.delete(0,tk.END)
 
@@ -73,6 +82,10 @@ class App(tk.Tk):
             for row in file_path:
                 log = statemachine.execute(row.replace('\n', ''))
                 self.displayInfo(log)
+            
+            if log['cur_state'] != 'q0':
+                self.listbox.insert(tk.END, '[###] Estado atual não é final')
+                self.listbox.itemconfig(self.countMsg, foreground='red')
     
     def displayInfo(self, log):
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
