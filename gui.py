@@ -79,6 +79,7 @@ class App(tk.Tk):
         if file_path is not None:
             statemachine.reset()
             self.listbox.delete(0,tk.END)
+            self.countMsg = 0
             for row in file_path:
                 log = statemachine.execute(row.replace('\n', ''))
                 self.displayInfo(log)
