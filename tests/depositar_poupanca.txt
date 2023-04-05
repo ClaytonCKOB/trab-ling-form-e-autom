@@ -11,3 +11,4 @@ senha
 [invalido]
 senha
 [valido]
+encerrar

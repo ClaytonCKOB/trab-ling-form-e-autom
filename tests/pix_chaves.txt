@@ -17,3 +17,5 @@ senha
 [invalido]
 senha
 [valido]
+voltar
+encerrar
