@@ -66,11 +66,6 @@ class App(tk.Tk):
     def readMsg(self, event):
         log = statemachine.execute(self.word.get())
 
-        if log['cur_state'] != 'q0':
-            self.successfull.place_forget()
-        else:
-            self.successfull.place(x=680, y=10)
-
         self.displayInfo(log)
         self.word.delete(0,tk.END)
 
@@ -89,6 +84,11 @@ class App(tk.Tk):
                 self.listbox.itemconfig(self.countMsg, foreground='red')
     
     def displayInfo(self, log):
+        if log['cur_state'] != 'q0':
+            self.successfull.place_forget()
+        else:
+            self.successfull.place(x=680, y=10)
+
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
         color = "#000" if log['error'] == 0 else "#DF2E38"
         self.listbox.insert(tk.END, text)
