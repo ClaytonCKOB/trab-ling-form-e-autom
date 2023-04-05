@@ -1,10 +1,14 @@
 from xml.etree import ElementTree
 
+
 class StateMachine:
     def __init__(self, jflap_file):
         self.initial_state = None
         self.final_states = set()
-        self.states = {}
+        self.states = {}  # Key: State ID, Value: State name
+
+        # Implements the transition function:
+        # Key: (State ID, Event), Value: Next State ID
         self.transitions = {}
 
         self.current_state = None
@@ -18,6 +22,7 @@ class StateMachine:
         tree = ElementTree.parse(file)
         automaton = tree.find("automaton")
 
+        # Loading the States
         for state in automaton.findall("state"):
             state_id = state.get("id")
             state_name = state.get("name")
@@ -27,7 +32,8 @@ class StateMachine:
                 self.initial_state = state_id
             if state.find("final") is not None:
                 self.final_states.add(state_id)
-    
+
+        # Loading the transition function
         for transition in automaton.findall("transition"):
             from_state = transition.find("from").text
             to_state = transition.find("to").text
@@ -44,15 +50,26 @@ class StateMachine:
             next_state = self.transitions[old_state, event]
             self.current_state = next_state
 
-            return {'old_state': self.states[old_state], 'dest_state': self.states[self.current_state], 'cur_state': self.states[self.current_state], 'error': 0}
+            return {
+                "old_state": self.states[old_state],
+                "dest_state": self.states[self.current_state],
+                "cur_state": self.states[self.current_state],
+                "error": 0,
+            }
         except KeyError:
             self.current_state = self.initial_state
-            return {'old_state':self.states[old_state], 'dest_state': self.states[self.initial_state], 'cur_state': self.states[self.initial_state],'error': 1}
+            return {
+                "old_state": self.states[old_state],
+                "dest_state": self.states[self.initial_state],
+                "cur_state": self.states[self.initial_state],
+                "error": 1,
+            }
 
     def accept(self):
         return self.current_state in self.final_states
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     s = StateMachine("Final.jff")
     with open("tests/depositar_poupanca.txt") as f:
         for l in f:
