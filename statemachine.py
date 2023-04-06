@@ -122,10 +122,14 @@ class StateMachine:
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
-            return self.analyzeEvent(old_state, ['q34', 'q35', 'q36', 'q37', 'q47', 'q39', 'q40', 'q45', 'q49'], self.come_back_state, 'Retorno da operação.')
+            transitions = {'q47': 'q45', 'q49': 'q47', 'q33': 'q1', 'q42': 'q41', 'q41': 'q40', 'q39': 'q40', 'q34': 'q33', 'q45': 'q33', 'q40': 'q33'}
+            if (self.current_state in transitions.keys()):
+                return self.analyzeEvent(old_state, [self.current_state], transitions[self.current_state], 'Chave inserida.')
+            else:
+                return self.errorMessage('q0')
 
         elif(search('^cancela$', palavra)):
-            return self.analyzeEvent(old_state, ['q42','q48', 'q47', 'q35', 'q39', 'q40', 'q37', 'q49'], 'q33', 'Pix cancelado.')
+            return self.analyzeEvent(old_state, ['q38', 'q41', 'q42','q48', 'q47', 'q35', 'q39', 'q40', 'q37', 'q49'], 'q33', 'Pix cancelado.')
         
         elif(search('^chave$', palavra)):
             transitions = {'q41': 'q44',  'q39':'q38', 'q45': 'q46'}
@@ -326,7 +330,12 @@ class StateMachine:
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
-            return self.analyzeEvent(old_state, ['q51', 'q55'], self.come_back_state, 'Retorno da operação.')
+            transitions = {'q53': 'q51', 'q55': 'q53', 'q51': 'q1'}
+
+            if self.current_state in transitions.keys():
+                return self.analyzeEvent(old_state, [self.current_state], transitions[self.current_state], 'Retorno da Operação')
+            else:
+                return self.errorMessage("q0")
 
         elif(search('^cancela$', palavra)):
             return self.analyzeEvent(old_state, ['q51','q53', 'q55'], 'q1', 'Transferência cancelada.')
