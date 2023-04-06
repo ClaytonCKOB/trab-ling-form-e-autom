@@ -32,8 +32,11 @@ class App(tk.Tk):
         label = ttk.Label(frame, text='Sistema Bancário', background=self.bg_color, font=("arial", 25, 'bold'), foreground="#FFF")
         label.place(x=10, y=15)
         self.word = ttk.Entry(frame)
-        self.word.place(x=550, y=25)
+        self.word.place(x=425, y=25)
         btn = ttk.Button(frame, text='Upload File', command= lambda : self.open_file())
+        btn.place(x=625, y=20)
+
+        btn = ttk.Button(frame, text="Reiniciar", command=self.reset)
         btn.place(x=750, y=20)
 
         self.info = tk.Frame(self, width=self.width, height=self.hInfo)
@@ -43,10 +46,9 @@ class App(tk.Tk):
         self.labCurState = ttk.Label(self.info, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
         self.labCurState.place(x=110, y=10)
 
-        self.successfull = ttk.Label(self.info, text='Movimento permitido', font=("arial", 12, 'bold'), foreground="#5F8D4E")
+        self.successfull = ttk.Label(self.info, text='Estado Final', font=("arial", 12, 'bold'), foreground="#5F8D4E")
         self.successfull.place(x=680, y=10)
 
-        
         self.body = tk.Frame(self, width=self.width, height=str(int(self.height) - int(self.hHeader) - int(self.hInfo)))
         self.body.grid(row=2, column=0)
         
@@ -82,8 +84,7 @@ class App(tk.Tk):
         file_path = askopenfile(mode='r', filetypes=[('Text Files', '*txt')])
         if file_path is not None:
             statemachine.reset()
-            self.listbox.delete(0,tk.END)
-            self.countMsg = 0
+            self.resetMsg()
             for row in file_path:
                 log = statemachine.execute(row.replace('\n', ''))
                 self.displayInfo(log)
@@ -96,15 +97,26 @@ class App(tk.Tk):
         """
         Prints a formatted version of the log informed as input
         """
-        if log['cur_state'] != 'q0':
-            self.successfull.place_forget()
-        else:
-            self.successfull.place(x=680, y=10)
-
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
         color = "#000" if log['error'] == 0 else "#DF2E38"
         self.listbox.insert(tk.END, text)
         self.listbox.itemconfig(self.countMsg, foreground=color)
         self.countMsg += 1
-        self.labCurState.config(text = log['cur_state'])
+        self.update_state_label(statemachine.current_state)
         self.word.config(text = '')
+    
+    def resetMsg(self):
+        self.listbox.delete(0, tk.END)
+        self.countMsg = 0
+    
+    def update_state_label(self, new_state):
+        self.labCurState.config(text=statemachine.current_state)
+        if statemachine.current_state in statemachine.final_states:
+            self.successfull.place(x=680, y=10)
+        else:
+            self.successfull.place_forget()
+
+    def reset(self):
+        self.resetMsg()
+        statemachine.reset()
+        self.labCurState.config(text=statemachine.current_state)
