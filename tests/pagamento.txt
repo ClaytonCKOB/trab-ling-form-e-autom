@@ -13,6 +13,9 @@ codigo de barras
 [valido]
 data de pagamento
 [valido]
+voltar
+data de pagamento
+[valido]
 senha
 [invalido]
 senha

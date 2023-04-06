@@ -1,0 +1,31 @@
+senha
+pagamento
+manual
+voltar
+manual
+codigo de barras
+[valido]
+cancela
+pagamento
+[leitura]
+[valido]
+data de pagamento
+[invalido]
+data de pagamento
+[valido]
+cancela
+pix
+chaves
+voltar
+chaves
+cadastrar
+cancela
+chaves
+voltar
+chaves
+cadastrar
+chave
+[invalido]
+chave
+[valido]
+cancela

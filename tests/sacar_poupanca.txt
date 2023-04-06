@@ -7,6 +7,9 @@ sacar poupanca
 valor
 voltar
 valor
+cancela
+sacar poupanca
+valor
 senha
 [invalido]
 senha
