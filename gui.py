@@ -5,6 +5,7 @@ from statemachine import StateMachine
 
 statemachine = StateMachine()
 
+
 class App(tk.Tk):
     def __init__(self):
         """
@@ -16,12 +17,12 @@ class App(tk.Tk):
         # root window
         self.height = 500
         self.width = 900
-        self.hHeader = int(self.height*0.15)
-        self.hInfo = int(self.height*0.1)
+        self.hHeader = int(self.height * 0.15)
+        self.hInfo = int(self.height * 0.1)
         self.scroll = None
 
-        self.title('Sistema Bancário - Linguagens Formais')
-        self.geometry(f'{self.width}x{self.height}')
+        self.title("Sistema Bancário - Linguagens Formais")
+        self.geometry(f"{self.width}x{self.height}")
         self.maxsize(self.width, self.height)
         self.style = ttk.Style(self)
         self.style.theme_use("clam")
@@ -29,11 +30,17 @@ class App(tk.Tk):
 
         frame = tk.Frame(self, bg=self.bg_color, width=self.width, height=self.hHeader)
         frame.grid(row=0, column=0)
-        label = ttk.Label(frame, text='Sistema Bancário', background=self.bg_color, font=("arial", 25, 'bold'), foreground="#FFF")
+        label = ttk.Label(
+            frame,
+            text="Sistema Bancário",
+            background=self.bg_color,
+            font=("arial", 25, "bold"),
+            foreground="#FFF",
+        )
         label.place(x=10, y=15)
         self.word = ttk.Entry(frame)
         self.word.place(x=425, y=25)
-        btn = ttk.Button(frame, text='Upload File', command=self.open_file)
+        btn = ttk.Button(frame, text="Upload File", command=self.open_file)
         btn.place(x=625, y=20)
 
         btn = ttk.Button(frame, text="Reiniciar", command=self.reset)
@@ -41,32 +48,41 @@ class App(tk.Tk):
 
         self.info = tk.Frame(self, width=self.width, height=self.hInfo)
         self.info.grid(row=1, column=0)
-        labTextCurState = ttk.Label(self.info, text='Estado atual: ', font=("arial", 12), foreground="#000")
+        labTextCurState = ttk.Label(
+            self.info, text="Estado atual: ", font=("arial", 12), foreground="#000"
+        )
         labTextCurState.place(x=10, y=10)
-        self.labCurState = ttk.Label(self.info, text='q0', font=("arial", 12, 'bold'), foreground="#5F8D4E")
+        self.labCurState = ttk.Label(
+            self.info, text="q0", font=("arial", 12, "bold"), foreground="#5F8D4E"
+        )
         self.labCurState.place(x=110, y=10)
 
-        self.successfull = ttk.Label(self.info, text='Estado Final', font=("arial", 12, 'bold'), foreground="#5F8D4E")
+        self.successfull = ttk.Label(
+            self.info,
+            text="Estado Final",
+            font=("arial", 12, "bold"),
+            foreground="#5F8D4E",
+        )
         self.successfull.place(x=680, y=10)
 
-        self.body = tk.Frame(self, width=self.width, height=self.height - self.hHeader - self.hInfo)
+        self.body = tk.Frame(
+            self, width=self.width, height=self.height - self.hHeader - self.hInfo
+        )
         self.body.grid(row=2, column=0)
-        
-        
-        self.bind('<Return>', self.readMsg)
+
+        self.bind("<Return>", self.readMsg)
 
         scroll_bar = tk.Scrollbar(self.body)
-  
-        scroll_bar.pack( side = tk.RIGHT,
-                        fill = tk.Y )
-        
-        self.listbox = tk.Listbox(self.body, 
-                        yscrollcommand = scroll_bar.set, width='100', height='19')
-    
-        
-        self.listbox.pack( side = tk.LEFT, fill = tk.BOTH )
-        
-        scroll_bar.config( command = self.listbox.yview )
+
+        scroll_bar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.listbox = tk.Listbox(
+            self.body, yscrollcommand=scroll_bar.set, width="100", height="19"
+        )
+
+        self.listbox.pack(side=tk.LEFT, fill=tk.BOTH)
+
+        scroll_bar.config(command=self.listbox.yview)
 
     def readMsg(self, event):
         """
@@ -75,36 +91,36 @@ class App(tk.Tk):
         log = statemachine.execute(self.word.get())
 
         self.displayInfo(log)
-        self.word.delete(0,tk.END)
+        self.word.delete(0, tk.END)
 
     def open_file(self):
         """
         Processes an entire text file at once through the state machine and logs the outputs
         """
-        file_path = askopenfile(mode='r', filetypes=[('Text Files', '*txt')])
+        file_path = askopenfile(mode="r", filetypes=[("Text Files", "*txt")])
         if file_path is not None:
             self.reset()
 
             for row in file_path:
-                log = statemachine.execute(row.replace('\n', ''))
+                log = statemachine.execute(row.replace("\n", ""))
                 self.displayInfo(log)
-            
-            if log['cur_state'] != 'q0':
-                self.listbox.insert(tk.END, '[###] Estado atual não é final')
-                self.listbox.itemconfig(self.countMsg, foreground='red')
-    
+
+            if log["cur_state"] != "q0":
+                self.listbox.insert(tk.END, "[###] Estado atual não é final")
+                self.listbox.itemconfig(self.countMsg, foreground="red")
+
     def displayInfo(self, log):
         """
         Prints a formatted version of the log informed as input
         """
         text = f"[{log['old_state']} -> {log['dest_state']}] {log['text']}"
-        color = "#000" if log['error'] == 0 else "#DF2E38"
+        color = "#000" if log["error"] == 0 else "#DF2E38"
         self.listbox.insert(tk.END, text)
         self.listbox.itemconfig(self.countMsg, foreground=color)
         self.countMsg += 1
         self.update_state_label()
-        self.word.config(text = '')
-    
+        self.word.config(text="")
+
     def update_state_label(self):
         """Update the state display label to match the current state of the machines"""
         self.labCurState.config(text=statemachine.current_state)
@@ -120,4 +136,3 @@ class App(tk.Tk):
         self.update_state_label()
         self.listbox.delete(0, tk.END)
         self.countMsg = 0
-

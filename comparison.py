@@ -8,13 +8,14 @@ st2 = ST2("Final.jff")
 
 used_transitions = set()
 
+
 def compare_automata(events):
     st1.reset()
     st2.reset()
 
     errors = []
     for i, l in enumerate(events, start=1):
-        l = l.strip() # Remove '\n'
+        l = l.strip()  # Remove '\n'
 
         used_transitions.add((st2.current_state, l))
 
@@ -34,7 +35,7 @@ def compare_automata(events):
                 f"    Saída Referência: {r2}"
             )
             return errors
-    
+
     # Compare final state
     if st1.current_state != st2.states[st2.current_state]:
         errors.append(
@@ -43,16 +44,17 @@ def compare_automata(events):
         return errors
     return errors
 
+
 # Run all tests
 tests = pathlib.Path(__file__).parent / "tests"
 for file in tests.iterdir():
     with file.open() as events:
-        if (errors := compare_automata(events)):
+        if errors := compare_automata(events):
             output = "ERRO"
         else:
             output = "OK"
     print(f"Teste '{file.name}': {output}")
-    
+
     for error in errors:
         print(error)
 
