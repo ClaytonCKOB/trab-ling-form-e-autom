@@ -424,7 +424,7 @@
 		<transition>
 			<from>19</from>
 			<to>15</to>
-			<read>[invaido]</read>
+			<read>[invalido]</read>
 		</transition>
 		<transition>
 			<from>34</from>
