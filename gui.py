@@ -14,10 +14,10 @@ class App(tk.Tk):
         self.countMsg = 0
         self.logs = []
         # root window
-        self.height = "500"
-        self.width = "900"
-        self.hHeader = str(int(int(self.height)*0.15))
-        self.hInfo = str(int(int(self.height)*0.1))
+        self.height = 500
+        self.width = 900
+        self.hHeader = int(self.height*0.15)
+        self.hInfo = int(self.height*0.1)
         self.scroll = None
 
         self.title('Sistema Bancário - Linguagens Formais')
@@ -33,7 +33,7 @@ class App(tk.Tk):
         label.place(x=10, y=15)
         self.word = ttk.Entry(frame)
         self.word.place(x=425, y=25)
-        btn = ttk.Button(frame, text='Upload File', command= lambda : self.open_file())
+        btn = ttk.Button(frame, text='Upload File', command=self.open_file)
         btn.place(x=625, y=20)
 
         btn = ttk.Button(frame, text="Reiniciar", command=self.reset)
@@ -49,7 +49,7 @@ class App(tk.Tk):
         self.successfull = ttk.Label(self.info, text='Estado Final', font=("arial", 12, 'bold'), foreground="#5F8D4E")
         self.successfull.place(x=680, y=10)
 
-        self.body = tk.Frame(self, width=self.width, height=str(int(self.height) - int(self.hHeader) - int(self.hInfo)))
+        self.body = tk.Frame(self, width=self.width, height=self.height - self.hHeader - self.hInfo)
         self.body.grid(row=2, column=0)
         
         
@@ -83,8 +83,8 @@ class App(tk.Tk):
         """
         file_path = askopenfile(mode='r', filetypes=[('Text Files', '*txt')])
         if file_path is not None:
-            statemachine.reset()
-            self.resetMsg()
+            self.reset()
+
             for row in file_path:
                 log = statemachine.execute(row.replace('\n', ''))
                 self.displayInfo(log)
@@ -102,14 +102,11 @@ class App(tk.Tk):
         self.listbox.insert(tk.END, text)
         self.listbox.itemconfig(self.countMsg, foreground=color)
         self.countMsg += 1
-        self.update_state_label(statemachine.current_state)
+        self.update_state_label()
         self.word.config(text = '')
     
-    def resetMsg(self):
-        self.listbox.delete(0, tk.END)
-        self.countMsg = 0
-    
-    def update_state_label(self, new_state):
+    def update_state_label(self):
+        """Update the state display label to match the current state of the machines"""
         self.labCurState.config(text=statemachine.current_state)
         if statemachine.current_state in statemachine.final_states:
             self.successfull.place(x=680, y=10)
@@ -117,6 +114,10 @@ class App(tk.Tk):
             self.successfull.place_forget()
 
     def reset(self):
-        self.resetMsg()
+        """Reset the system state"""
         statemachine.reset()
-        self.labCurState.config(text=statemachine.current_state)
+
+        self.update_state_label()
+        self.listbox.delete(0, tk.END)
+        self.countMsg = 0
+
