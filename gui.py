@@ -7,6 +7,9 @@ statemachine = StateMachine()
 
 class App(tk.Tk):
     def __init__(self):
+        """
+        Sets App's default properties
+        """
         super().__init__()
         self.countMsg = 0
         self.logs = []
@@ -64,12 +67,18 @@ class App(tk.Tk):
         scroll_bar.config( command = self.listbox.yview )
 
     def readMsg(self, event):
+        """
+        Reads input from the text bar and uploads a word into the state machine
+        """
         log = statemachine.execute(self.word.get())
 
         self.displayInfo(log)
         self.word.delete(0,tk.END)
 
     def open_file(self):
+        """
+        Processes an entire text file at once through the state machine and logs the outputs
+        """
         file_path = askopenfile(mode='r', filetypes=[('Text Files', '*txt')])
         if file_path is not None:
             statemachine.reset()
@@ -84,6 +93,9 @@ class App(tk.Tk):
                 self.listbox.itemconfig(self.countMsg, foreground='red')
     
     def displayInfo(self, log):
+        """
+        Prints a formatted version of the log informed as input
+        """
         if log['cur_state'] != 'q0':
             self.successfull.place_forget()
         else:

@@ -2,6 +2,9 @@ from re import search, sub
 
 class StateMachine:
     def __init__(self):
+        """
+        Sets the state machine's default properties
+        """
         self.current_state = 'q0'
         self.final_states = ['q0']
         self.current_event = 'login'
@@ -19,10 +22,46 @@ class StateMachine:
             'pix': self.pix
         }
 
+    def analyzeEvent(self, old_state, required, goal, text):
+        """
+        Analyzes if the transition exists from the current state.
+        Returns message with information about its success.
+        """
+        self.come_back_state = old_state
+        if self.current_state in required:
+            self.current_state = goal
+            if goal == 'q1':
+                self.current_event = 'home'
+            return {'text': text, 'old_state': old_state, 'dest_state': self.current_state, 'cur_state': self.current_state, 'error': 0}
+        else:
+            return  self.errorMessage(goal)
+
+    def errorMessage(self, cur_state):
+        """
+        Resets state and event and returns an error message
+        """
+        old_state = self.current_state
+        self.reset()
+        return {'text': 'Erro: movimento não permitido', 'old_state':old_state, 'dest_state':cur_state, 'cur_state': 'q0','error': 1}
+    
+    def reset(self):
+        """
+        Resets state machine to the first state and event
+        """
+        self.current_state = 'q0'
+        self.current_event = 'login'
+
     def execute(self, palavra):
+        """
+        Redirects the input word to the function responsible for the current event
+        """
         return self.events[self.current_event](palavra)
 
     def home(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
 
         if(search('^encerrar$', palavra)):
@@ -65,6 +104,9 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def login(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        """
         if(search('^senha$', palavra)):
             self.current_event = 'home'
             return self.analyzeEvent('q0', ['q0'], 'q1', 'Login realizado.')
@@ -73,6 +115,10 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def pix(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -143,6 +189,10 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def sacarPoupanca(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -169,6 +219,10 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def depositarPoupanca(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -195,6 +249,10 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def fazerEmprestimo(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -227,6 +285,10 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def pagarParcela(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -257,6 +319,10 @@ class StateMachine:
             return self.errorMessage('q0')
 
     def transferencia(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -297,6 +363,10 @@ class StateMachine:
             return self.errorMessage('q0')
     
     def pagamento(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -345,6 +415,10 @@ class StateMachine:
             return self.errorMessage('q0')
     
     def investimento(self, palavra):
+        """
+        Performs the transition of states, if possible, and returns a message about its success.
+        Additionally, in case of error, resets to the login event.
+        """
         old_state = self.current_state
         
         if(search('^voltar$', palavra)):
@@ -402,23 +476,3 @@ class StateMachine:
         else:
             self.current_event = 'login'
             return self.errorMessage('q0')
-
-    def analyzeEvent(self, old_state, required, goal, text):
-        self.come_back_state = old_state
-        if self.current_state in required:
-            self.current_state = goal
-            if goal == 'q1':
-                self.current_event = 'home'
-            return {'text': text, 'old_state': old_state, 'dest_state': self.current_state, 'cur_state': self.current_state, 'error': 0}
-        else:
-            return  self.errorMessage(goal)
-
-    def errorMessage(self, cur_state):
-        old_state = self.current_state
-        self.current_state = 'q0'
-        self.current_event = 'login'
-        return {'text': 'Erro: movimento não permitido', 'old_state':old_state, 'dest_state':cur_state, 'cur_state': 'q0','error': 1}
-    
-    def reset(self):
-        self.current_state = 'q0'
-        self.current_event = 'login'
